@@ -3,23 +3,56 @@ import json
 import os
 from datetime import datetime
 from collections import defaultdict
+import numpy as np
 import calendar
+import matplotlib.pyplot as plt
+import matplotlib
+from io import BytesIO
+import base64
 
-# --- Color Palette (OpenWrt-inspired) ---
+# --- تنظیم Matplotlib ---
+matplotlib.use("Agg")
+plt.rcParams.update({
+    'font.family': 'sans-serif',
+    'font.sans-serif': ['Arial', 'DejaVu Sans', 'Calibri', 'Helvetica'],
+    'axes.titleweight': 'bold',
+    'axes.titlesize': 13,
+    'axes.labelsize': 10,
+    'axes.labelweight': 'bold',
+    'axes.edgecolor': '#333333',
+    'axes.linewidth': 0.8,
+    'axes.facecolor': '#F8F9FA',
+    'figure.facecolor': '#F8F9FA',
+    'grid.color': '#CCCCCC',
+    'grid.linestyle': '--',
+    'grid.alpha': 0.4,
+    'xtick.labelsize': 9,
+    'ytick.labelsize': 9,
+    'text.color': '#2C2C2C',
+    'axes.labelcolor': '#2C2C2C',
+    'xtick.color': '#2C2C2C',
+    'ytick.color': '#2C2C2C',
+    'savefig.transparent': False,
+    'savefig.pad_inches': 0.3,
+    'savefig.dpi': 120,
+    'lines.linewidth': 2.5
+})
+
+# --- Color Palette ---
 colors = {
-    "primary": "#0078D7",   # Blue
-    "background": "#F5F5F5",  # Light gray
-    "card": "#FFFFFF",      # White
-    "text": "#2C2C2C",      # Dark text
-    "text_light": "#6E6E6E", # Muted
-    "accent": "#00A86B",    # Green for income
-    "danger": "#D93025",    # Red for expenses
-    "border": "#D0D0D0",    # Light border
-    "hover_bg": "#F0F0F0",  # Hover background
+    "primary": "#0078D7",
+    "background": "#F5F5F5",
+    "card": "#FFFFFF",
+    "text": "#2C2C2C",
+    "text_light": "#6E6E6E",
+    "accent": "#00A86B",  # سبز
+    "danger": "#D93025",  # قرمز
+    "border": "#D0D0D0",
+    "hover_bg": "#F0F0F0",
     "header": "#0078D7",
 }
 
-# Data file
+# --- Data File ---
 DATA_FILE = "data.json"
 default_data = {
     "income": [],
@@ -57,8 +90,131 @@ def save_data(data_to_save):
     except Exception as e:
         print(f"Save error: {e}")
 
+# بارگذاری داده
 data = load_data()
 save_data(data)
+
+# --- Reusable StatCard ---
+def StatCard(title, value, color, icon):
+    return ft.Container(
+        content=ft.Column([
+            ft.Row([
+                ft.Icon(icon, color=color, size=20),
+                ft.Text(title, size=12, color=colors["text_light"], font_family="Inter")
+            ], spacing=6),
+            ft.Text(value, size=20, color=colors["text"], weight="bold", font_family="Inter Bold"),
+        ], spacing=4),
+        padding=16,
+        border=ft.border.all(1, colors["border"]),
+        border_radius=6,
+        bgcolor=colors["card"],
+        width=200,
+        height=100
+    )
+
+# --- کش چارت‌ها (برای سرعت بالا) ---
+chart_cache = {
+    "last_hash": None,
+    "income_pie": None,
+    "expense_pie": None,
+    "monthly_bar": None,
+    "net_balance_line": None
+}
+
+def get_data_hash():
+    return hash(json.dumps(data, sort_keys=True))
+
+# --- تبدیل plt به ft.Image ---
+def plot_to_image():
+    buf = BytesIO()
+    plt.savefig(buf, format="png", dpi=100, bbox_inches='tight')
+    plt.close()  # مهم: بستن صحیح فیگور
+    buf.seek(0)
+    img_base64 = base64.b64encode(buf.read()).decode("utf-8")
+    return ft.Image(
+        src_base64=img_base64,
+        width=600,
+        height=300,
+        fit=ft.ImageFit.CONTAIN
+    )
+
+# --- چارت: درآمد بر اساس دسته ---
+def create_income_pie(income_data):
+    if not income_data:
+        return ft.Text("No income data.", italic=True, color=colors["text_light"])
+    labels = list(income_data.keys())
+    sizes = list(income_data.values())
+    plt.figure(figsize=(5, 4))
+    plt.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90,
+            colors=["#66B2FF", "#99FF99", "#FFD700", "#FF9999", "#C2C2F0"][:len(labels)])
+    plt.title("Income Distribution by Category", fontsize=12, fontweight='bold', pad=20)
+    return plot_to_image()
+
+# --- چارت: مخارج بر اساس دسته ---
+def create_expense_pie(expense_data):
+    if not expense_data:
+        return ft.Text("No expense data.", italic=True, color=colors["text_light"])
+    labels = list(expense_data.keys())
+    sizes = list(expense_data.values())
+    plt.figure(figsize=(5, 4))
+    plt.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90,
+            colors=["#FF9999", "#FFCC99", "#FF99CC", "#FF6666", "#C2C2F0", "#FFB3E6", "#D93025"][:len(labels)])
+    plt.title("Expense Distribution by Category", fontsize=12, fontweight='bold', pad=20)
+    return plot_to_image()
+
+# --- چارت: مقایسه ماهانه درآمد و مخارج ---
+def create_monthly_bar(monthly_data):
+    if not monthly_data:
+        return ft.Text("No monthly data.", italic=True, color=colors["text_light"])
+
+    months = sorted(monthly_data.keys())
+    month_labels = [f"{m[5:]}/{m[:4][2:]}" for m in months]
+    incomes = [monthly_data[m]["income"] for m in months]
+    expenses = [monthly_data[m]["expenses"] for m in months]
+
+    x = range(len(months))
+    width = 0.35
+
+    plt.figure(figsize=(7, 4))
+    plt.bar([i - width/2 for i in x], incomes, width, label="Income", color=colors["accent"], alpha=0.8)
+    plt.bar([i + width/2 for i in x], expenses, width, label="Expenses", color=colors["danger"], alpha=0.8)
+    plt.xlabel("Month (MM/YY)", fontsize=10)
+    plt.ylabel("Amount", fontsize=10)
+    plt.title("Monthly Income vs Expenses", fontsize=12, fontweight='bold', pad=15)
+    plt.xticks(x, month_labels, rotation=0, fontsize=9)
+    plt.yticks(fontsize=9)
+    plt.legend(fontsize=10)
+    plt.grid(axis='y', linestyle='--', alpha=0.4)
+    plt.tight_layout(pad=2.0)
+    return plot_to_image()
+
+# --- چارت: روند تراز مالی (Net Balance Trend) ---
+def create_net_balance_line(monthly_data):
+    if not monthly_data:
+        return ft.Text("No data for balance trend.", italic=True, color=colors["text_light"])
+
+    months = sorted(monthly_data.keys())
+    month_labels = [f"{m[5:]}/{m[:4][2:]}" for m in months]
+    balances = [monthly_data[m]["income"] - monthly_data[m]["expenses"] for m in months]
+
+    plt.figure(figsize=(7, 4))
+    plt.plot(month_labels, balances, marker='o', linewidth=2.5, color=colors["primary"], label="Net Balance")
+
+    # رنگ‌دهی مثبت/منفی
+    for i, bal in enumerate(balances):
+        color = colors["accent"] if bal >= 0 else colors["danger"]
+        plt.plot(i, bal, 'o', color=color)
+        plt.text(i, bal + (10 if bal >= 0 else -15), f"{bal:,.0f}", fontsize=8, ha='center', va='center')
+
+    plt.axhline(0, color=colors["text_light"], linewidth=1, linestyle='--')
+    plt.xlabel("Month (MM/YY)", fontsize=10)
+    plt.ylabel("Net Balance", fontsize=10)
+    plt.title("Monthly Net Balance Trend", fontsize=12, fontweight='bold', pad=15)
+    plt.xticks(rotation=0, fontsize=9)
+    plt.yticks(fontsize=9)
+    plt.grid(axis='y', linestyle='--', alpha=0.5)
+    plt.tight_layout(pad=2.0)
+    return plot_to_image()
 
 # --- Main App ---
 def main(page: ft.Page):
@@ -69,10 +225,10 @@ def main(page: ft.Page):
         "Inter": "fonts/Inter-Regular.ttf",
         "Inter Bold": "fonts/Inter-Bold.ttf",
     }
-    page.window_width = 1000
-    page.window_height = 700
-    page.window_min_width = 800
-    page.window_min_height = 600
+    page.window_width = 1200
+    page.window_height = 800
+    page.window_min_width = 1000
+    page.window_min_height = 700
 
     # --- Utility Functions ---
     def create_text_field(label, color, width=300):
@@ -156,23 +312,6 @@ def main(page: ft.Page):
         def fmt(n):
             return f"{n:,.2f}"
 
-        def StatCard(title, value, color, icon):
-            return ft.Container(
-                content=ft.Column([
-                    ft.Row([
-                        ft.Icon(icon, color=color, size=20),
-                        ft.Text(title, size=12, color=colors["text_light"], font_family="Inter")
-                    ], spacing=6),
-                    ft.Text(value, size=20, color=colors["text"], weight="bold", font_family="Inter Bold"),
-                ], spacing=4),
-                padding=16,
-                border=ft.border.all(1, colors["border"]),
-                border_radius=6,
-                bgcolor=colors["card"],
-                width=200,
-                height=100
-            )
-
         stats = ft.Row(
             controls=[
                 StatCard("Income", fmt(total_income), colors["accent"], "trending_up"),
@@ -183,7 +322,6 @@ def main(page: ft.Page):
             wrap=True
         )
 
-        # --- فرم درآمد ---
         amount_inc = create_text_field("Amount", colors["accent"], width=120)
         source_inc = create_text_field("Source", colors["accent"], width=120)
         cat_inc = create_dropdown("Category", data["categories"]["income"], colors["accent"])
@@ -225,7 +363,6 @@ def main(page: ft.Page):
             width=380
         )
 
-        # --- فرم مخارج ---
         amount_exp = create_text_field("Amount", colors["danger"], width=120)
         desc_exp = create_text_field("Description", colors["danger"], width=120)
         cat_exp = create_dropdown("Category", data["categories"]["expenses"], colors["danger"])
@@ -267,7 +404,6 @@ def main(page: ft.Page):
             width=380
         )
 
-        # --- تراکنش‌های اخیر ---
         recent_tx = []
         all_tx = (
             [{"type": "income", **tx} for tx in data["income"]] +
@@ -280,7 +416,6 @@ def main(page: ft.Page):
             color = colors["accent"] if tx['type'] == 'income' else colors["danger"]
             label = tx.get("source", tx.get("description", "Unknown"))
             icon = "add" if tx['type'] == 'income' else "remove"
-
             recent_tx.append(
                 ft.ListTile(
                     dense=True,
@@ -310,7 +445,6 @@ def main(page: ft.Page):
             margin=ft.margin.only(top=20)
         )
 
-        # --- نمایش نهایی داشبورد ---
         content_area.content = ft.Column([
             ft.Text("Dashboard", size=24, weight="bold", color=colors["text"], font_family="Inter Bold"),
             ft.Divider(height=24, color="transparent"),
@@ -320,57 +454,98 @@ def main(page: ft.Page):
         ], scroll=ft.ScrollMode.HIDDEN, spacing=20, expand=True)
         page.update()
 
-    # --- REPORTS ---
+    # --- REPORTS با تمام چارت‌ها ---
     def show_reports():
+        # گردآوری داده‌ها
         monthly = defaultdict(lambda: {"income": 0.0, "expenses": 0.0})
-        for inc in data["income"]: monthly[inc["date"][:7]]["income"] += inc["amount"]
-        for exp in data["expenses"]: monthly[exp["date"][:7]]["expenses"] += exp["amount"]
+        income_by_cat = defaultdict(float)
+        expense_by_cat = defaultdict(float)
 
-        if not monthly:
-            content_area.content = ft.Container(
-                content=ft.Text("No data available for reports.", size=16, color=colors["text_light"], font_family="Inter"),
-                alignment=ft.alignment.center,
-                padding=20
-            )
-            return
+        for inc in data["income"]:
+            month_key = inc["date"][:7]
+            monthly[month_key]["income"] += inc["amount"]
+            income_by_cat[inc["category"]] += inc["amount"]
 
-        max_val = max(max(m["income"], m["expenses"]) for m in monthly.values())
+        for exp in data["expenses"]:
+            month_key = exp["date"][:7]
+            monthly[month_key]["expenses"] += exp["amount"]
+            expense_by_cat[exp["category"]] += exp["amount"]
 
-        monthly_charts = []
-        for month_year in sorted(monthly.keys(), reverse=True):
-            m_data = monthly[month_year]
-            year, mon = month_year.split("-")
-            month_name = f"{calendar.month_abbr[int(mon)]} {year}"
-            inc_width = (m_data["income"] / max_val) * 200 if max_val > 0 else 0
-            exp_width = (m_data["expenses"] / max_val) * 200 if max_val > 0 else 0
+        # آمار کلی
+        total_income = sum(m["income"] for m in monthly.values())
+        total_expenses = sum(m["expenses"] for m in monthly.values())
+        net_balance = total_income - total_expenses
 
-            monthly_charts.append(
+        # --- کس چارت‌ها ---
+        current_hash = get_data_hash()
+        if chart_cache["last_hash"] != current_hash:
+            chart_cache["income_pie"] = create_income_pie(income_by_cat)
+            chart_cache["expense_pie"] = create_expense_pie(expense_by_cat)
+            chart_cache["monthly_bar"] = create_monthly_bar(monthly)
+            chart_cache["net_balance_line"] = create_net_balance_line(monthly)
+            chart_cache["last_hash"] = current_hash
+
+        # --- نمایش ---
+        content_area.content = ft.Column(
+            controls=[
+                ft.Text("📊 Financial Reports", size=24, weight="bold", color=colors["text"], font_family="Inter Bold"),
+                ft.Divider(height=20, color="transparent"),
+
+                # آمار کلی
+                ft.Row([
+                    StatCard("Total Income", f"{total_income:,.2f}", colors["accent"], "paid"),
+                    StatCard("Total Expenses", f"{total_expenses:,.2f}", colors["danger"], "payments"),
+                    StatCard("Net Balance", f"{net_balance:,.2f}", colors["primary"], "balance"),
+                ], spacing=16, wrap=True),
+
+                ft.Divider(height=20, color="transparent"),
+
+                # چارت‌های دایره‌ای
+                ft.Row([
+                    ft.Container(
+                        content=ft.Column([
+                            ft.Text("📈 Income by Category", size=16, weight="bold", color=colors["text"], font_family="Inter Bold"),
+                            chart_cache["income_pie"]
+                        ], spacing=10),
+                        expand=True,
+                        padding=10
+                    ),
+                    ft.Container(
+                        content=ft.Column([
+                            ft.Text("💸 Expenses by Category", size=16, weight="bold", color=colors["text"], font_family="Inter Bold"),
+                            chart_cache["expense_pie"]
+                        ], spacing=10),
+                        expand=True,
+                        padding=10
+                    )
+                ], spacing=20, expand=True),
+
+                ft.Divider(height=20, color="transparent"),
+
+                # چارت میله‌ای
                 ft.Container(
                     content=ft.Column([
-                        ft.Text(month_name, size=14, weight="bold", color=colors["text"], font_family="Inter"),
-                        ft.Row([
-                            ft.Container(bgcolor=colors["accent"], width=inc_width, height=12, border_radius=6),
-                            ft.Text(f"{m_data['income']:,.2f}", size=12, color=colors["text_light"], font_family="Inter")
-                        ]),
-                        ft.Row([
-                            ft.Container(bgcolor=colors["danger"], width=exp_width, height=12, border_radius=6),
-                            ft.Text(f"{m_data['expenses']:,.2f}", size=12, color=colors["text_light"], font_family="Inter")
-                        ])
-                    ], spacing=6),
-                    padding=12,
-                    border=ft.border.all(1, colors["border"]),
-                    border_radius=6,
-                    bgcolor=colors["card"],
-                    margin=ft.margin.only(bottom=8)
-                )
-            )
+                        ft.Text("📅 Monthly Income vs Expenses", size=16, weight="bold", color=colors["text"], font_family="Inter Bold"),
+                        chart_cache["monthly_bar"]
+                    ], spacing=10),
+                    padding=10
+                ),
 
-        content_area.content = ft.Column([
-            ft.Text("Financial Reports", size=24, weight="bold", color=colors["text"], font_family="Inter Bold"),
-            ft.Divider(height=20, color="transparent"),
-            ft.Text("Monthly Overview", size=16, weight="bold", color=colors["text"], font_family="Inter Bold"),
-            *monthly_charts
-        ], scroll=ft.ScrollMode.ADAPTIVE, spacing=16, expand=True)
+                ft.Divider(height=20, color="transparent"),
+
+                # چارت تراز
+                ft.Container(
+                    content=ft.Column([
+                        ft.Text("💰 Net Balance Trend", size=16, weight="bold", color=colors["text"], font_family="Inter Bold"),
+                        chart_cache["net_balance_line"]
+                    ], spacing=10),
+                    padding=10
+                )
+            ],
+            scroll=ft.ScrollMode.ADAPTIVE,
+            spacing=20,
+            expand=True
+        )
         page.update()
 
     # --- SETTINGS ---
@@ -451,9 +626,8 @@ def main(page: ft.Page):
         ], scroll=ft.ScrollMode.HIDDEN, spacing=16, expand=True)
         page.update()
 
-    # --- NAVIGATION HANDLER ---
+    # --- Navigation Handler ---
     def on_rail_change(e):
-        page.overlay.clear()
         index = e.control.selected_index
         views = [show_dashboard, show_reports, show_settings]
         views[index]()
@@ -463,14 +637,11 @@ def main(page: ft.Page):
 
     # --- اضافه کردن به صفحه ---
     page.add(
-        ft.Row(
-            [
-                rail,
-                ft.VerticalDivider(width=1, color=colors["border"]),
-                content_area
-            ],
-            expand=True
-        )
+        ft.Row([
+            rail,
+            ft.VerticalDivider(width=1, color=colors["border"]),
+            content_area
+        ], expand=True)
     )
 
     # نمایش اولیه
