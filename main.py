@@ -98,9 +98,9 @@ def StatCard(title, value, color, icon):
         content=ft.Column([
             ft.Row([
                 ft.Icon(icon, color=color, size=20),
-                ft.Text(title, size=12, color=colors["text_light"], font_family="Inter")
+                ft.Text(title, size=12, color=colors["text_light"], font_family="Vazirmatn")
             ], spacing=6),
-            ft.Text(value, size=20, color=colors["text"], weight="bold", font_family="Inter Bold"),
+            ft.Text(value, size=20, color=colors["text"], weight="bold", font_family="Vazirmatn Bold"),
         ], spacing=4),
         padding=16,
         border=ft.border.all(1, colors["border"]),
@@ -220,8 +220,8 @@ def main(page: ft.Page):
     page.theme_mode = ft.ThemeMode.LIGHT
     page.bgcolor = colors["background"]
     page.fonts = {
-        "Inter": "fonts/Inter-Regular.ttf",
-        "Inter Bold": "fonts/Inter-Bold.ttf",
+        "Vazirmatn": "fonts/Vazirmatn-Medium.ttf",
+        "Vazirmatn Bold": "fonts/Vazirmatn-Bold.ttf",
     }
     page.window_width = 1200
     page.window_height = 800
@@ -286,12 +286,12 @@ def main(page: ft.Page):
             ft.NavigationRailDestination(icon="settings", selected_icon="settings", label="Settings"),
         ],
         leading=ft.Container(
-            content=ft.Text("Finely", size=18, weight="bold", color=colors["header"], font_family="Inter Bold"),
+            content=ft.Text("Finely", size=18, weight="bold", color=colors["header"], font_family="Vazirmatn Bold"),
             padding=ft.padding.only(left=16, top=16, bottom=16)
         ),
         trailing=ft.Container(
             padding=ft.padding.only(bottom=16),
-            content=ft.Text("v1.0", size=12, color=colors["text_light"])
+            content=ft.Text("v1.0.0", size=12, color=colors["text_light"])
         )
     )
 
@@ -348,7 +348,7 @@ def main(page: ft.Page):
 
         income_form = ft.Container(
             content=ft.Column([
-                ft.Text("➕ Add Income", size=16, weight="bold", color=colors["text"], font_family="Inter Bold"),
+                ft.Text("➕ Add Income", size=16, weight="bold", color=colors["text"], font_family="Vazirmatn Bold"),
                 ft.Divider(height=12, color="transparent"),
                 ft.Row([amount_inc, source_inc], spacing=10),
                 cat_inc,
@@ -389,7 +389,7 @@ def main(page: ft.Page):
 
         expense_form = ft.Container(
             content=ft.Column([
-                ft.Text("➖ Add Expense", size=16, weight="bold", color=colors["text"], font_family="Inter Bold"),
+                ft.Text("➖ Add Expense", size=16, weight="bold", color=colors["text"], font_family="Vazirmatn Bold"),
                 ft.Divider(height=12, color="transparent"),
                 ft.Row([amount_exp, desc_exp], spacing=10),
                 cat_exp,
@@ -424,15 +424,15 @@ def main(page: ft.Page):
                         border_radius=14,
                         alignment=ft.alignment.center
                     ),
-                    title=ft.Text(label, size=14, color=colors["text"], font_family="Inter"),
-                    subtitle=ft.Text(f"{tx['category']} • {tx['date']}", size=12, color=colors["text_light"], font_family="Inter"),
+                    title=ft.Text(label, size=14, color=colors["text"], font_family="Vazirmatn"),
+                    subtitle=ft.Text(f"{tx['category']} • {tx['date']}", size=12, color=colors["text_light"], font_family="Vazirmatn"),
                     trailing=ft.Text(amount, color=color, size=14, weight="bold"),
                 )
             )
 
         recent_section = ft.Container(
             content=ft.Column([
-                ft.Text("📌 Recent Transactions", size=18, weight="bold", color=colors["text"], font_family="Inter Bold"),
+                ft.Text("📌 Recent Transactions", size=18, weight="bold", color=colors["text"], font_family="Vazirmatn Bold"),
                 ft.Divider(height=1, color=colors["border"]),
                 *recent_tx
             ]),
@@ -444,7 +444,7 @@ def main(page: ft.Page):
         )
 
         content_area.content = ft.Column([
-            ft.Text("Dashboard", size=24, weight="bold", color=colors["text"], font_family="Inter Bold"),
+            ft.Text("Dashboard", size=24, weight="bold", color=colors["text"], font_family="Vazirmatn Bold"),
             ft.Divider(height=24, color="transparent"),
             stats,
             ft.Row([income_form, expense_form], spacing=20, wrap=True),
@@ -486,7 +486,7 @@ def main(page: ft.Page):
         # --- نمایش ---
         content_area.content = ft.Column(
             controls=[
-                ft.Text("📊 Financial Reports", size=24, weight="bold", color=colors["text"], font_family="Inter Bold"),
+                ft.Text("Financial Reports", size=24, weight="bold", color=colors["text"], font_family="Vazirmatn Bold"),
                 ft.Divider(height=20, color="transparent"),
 
                 # آمار کلی
@@ -502,7 +502,7 @@ def main(page: ft.Page):
                 ft.Row([
                     ft.Container(
                         content=ft.Column([
-                            ft.Text("📈 Income by Category", size=16, weight="bold", color=colors["text"], font_family="Inter Bold"),
+                            ft.Text("📈 Income by Category", size=16, weight="bold", color=colors["text"], font_family="Vazirmatn Bold"),
                             chart_cache["income_pie"]
                         ], spacing=10),
                         expand=True,
@@ -510,7 +510,7 @@ def main(page: ft.Page):
                     ),
                     ft.Container(
                         content=ft.Column([
-                            ft.Text("💸 Expenses by Category", size=16, weight="bold", color=colors["text"], font_family="Inter Bold"),
+                            ft.Text("💸 Expenses by Category", size=16, weight="bold", color=colors["text"], font_family="Vazirmatn Bold"),
                             chart_cache["expense_pie"]
                         ], spacing=10),
                         expand=True,
@@ -523,7 +523,7 @@ def main(page: ft.Page):
                 # چارت میله‌ای
                 ft.Container(
                     content=ft.Column([
-                        ft.Text("📅 Monthly Income vs Expenses", size=16, weight="bold", color=colors["text"], font_family="Inter Bold"),
+                        ft.Text("📅 Monthly Income vs Expenses", size=16, weight="bold", color=colors["text"], font_family="Vazirmatn Bold"),
                         chart_cache["monthly_bar"]
                     ], spacing=10),
                     padding=10
@@ -534,7 +534,7 @@ def main(page: ft.Page):
                 # چارت تراز
                 ft.Container(
                     content=ft.Column([
-                        ft.Text("💰 Net Balance Trend", size=16, weight="bold", color=colors["text"], font_family="Inter Bold"),
+                        ft.Text("💰 Net Balance Trend", size=16, weight="bold", color=colors["text"], font_family="Vazirmatn Bold"),
                         chart_cache["net_balance_line"]
                     ], spacing=10),
                     padding=10
@@ -552,7 +552,7 @@ def main(page: ft.Page):
         exp_list = ft.Column(spacing=4)
         new_inc = create_text_field("New Income Category", colors["accent"], width=220)
         new_exp = create_text_field("New Expense Category", colors["danger"], width=220)
-        status = ft.Text("", size=13, font_family="Inter")
+        status = ft.Text("", size=13, font_family="Vazirmatn")
 
         def refresh_cats():
             nonlocal inc_list, exp_list
@@ -609,14 +609,14 @@ def main(page: ft.Page):
         refresh_cats()
 
         content_area.content = ft.Column([
-            ft.Text("Settings", size=24, weight="bold", color=colors["text"], font_family="Inter Bold"),
+            ft.Text("Settings", size=24, weight="bold", color=colors["text"], font_family="Vazirmatn Bold"),
             ft.Divider(height=20, color="transparent"),
 
-            ft.Text("Income Categories", size=16, weight="bold", color=colors["text"], font_family="Inter Bold"),
+            ft.Text("Income Categories", size=16, weight="bold", color=colors["text"], font_family="Vazirmatn Bold"),
             ft.Row([new_inc, create_button("Add", colors["accent"], lambda e: add_cat("income", new_inc, inc_list))], spacing=10),
             ft.Container(inc_list, border=ft.border.all(1, colors["border"]), border_radius=6, bgcolor=colors["card"], margin=ft.margin.only(bottom=16)),
 
-            ft.Text("Expense Categories", size=16, weight="bold", color=colors["text"], font_family="Inter Bold"),
+            ft.Text("Expense Categories", size=16, weight="bold", color=colors["text"], font_family="Vazirmatn Bold"),
             ft.Row([new_exp, create_button("Add", colors["danger"], lambda e: add_cat("expenses", new_exp, exp_list))], spacing=10),
             ft.Container(exp_list, border=ft.border.all(1, colors["border"]), border_radius=6, bgcolor=colors["card"], margin=ft.margin.only(bottom=16)),
 
