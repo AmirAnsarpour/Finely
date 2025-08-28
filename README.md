@@ -10,7 +10,7 @@
 
 - **📊 Dashboard of Doom**: Real-time income, expenses, and net balance stats. See your financial failures instantly!
 - **📈 Charts That Make You Question Reality**: Pie charts slicing categories like a mad scientist, bar charts comparing months like parallel universes, line charts trending your net worth like a wormhole collapse.
-- **💾 Fort Knox Storage**: Data dumps into a local `data.json`. Private as hell—Rick approved, no interdimensional leaks.
+- **💾 Fort Knox Storage**: Data dumps into a local `data.json`. Private as hell approved, no interdimensional leaks.
 - **📦 Runs on Any Garbage OS**: Windows, macOS, Linux. Grab the installer, no Python BS for you normies. Standalone and unstoppable!
 - **🔧 Customize Like a Boss**: Tweak categories in-app. Make it your own financial multiverse.
 
