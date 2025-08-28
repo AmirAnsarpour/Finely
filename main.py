@@ -3,8 +3,6 @@ import json
 import os
 from datetime import datetime
 from collections import defaultdict
-import numpy as np
-import calendar
 import matplotlib.pyplot as plt
 import matplotlib
 from io import BytesIO

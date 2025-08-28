@@ -30,7 +30,7 @@ python main.py
 ### Grab the Installer (For Lazy Geniuses)
 
 1. Hit [Releases](https://github.com/AmirAnsarpour/Finely/releases).
-2. Snag your OS flavor: **Windows:** `Finely.exe` | **macOS:** `Finely.app` | **Linux:** `Finely.AppImage`.
+2. Snag your OS flavor: **Windows:** `Finely-Windows.exe`.
 3. Run it! (Chmod if your system's a wimp.)
 
 No Python? Who cares! It's all bundled, ready to dominate.
