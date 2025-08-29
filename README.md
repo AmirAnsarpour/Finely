@@ -2,7 +2,7 @@
 
 Listen up, you primitive money-grubbing meatbags! **Finely** is the most *insanely* badass desktop app for wrestling your pathetic Earth credits into submission. Built with Flet and Python, it’s got a *sick dark mode* and a UI so slick it’ll make your brain short-circuit. Your data? Locked in a local `data.json` vault, safe from the prying eyes of interdimensional tax collectors. Clouds? Pfft, we don’t trust that garbage. Take control of your cash or get schwifty trying.
 
-![Finely Dashboard](screenshots/dashboard.jpg)![Finely Reports](screenshots/reports.jpg)\
+![Finely Dashboard](assets/screenshots/dashboard.jpg)![Finely Reports](assets/screenshots/reports.jpg)\
 *Bow before its cosmic glory, you financial plebs.*
 
 ---
