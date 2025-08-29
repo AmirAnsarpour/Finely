@@ -1,24 +1,26 @@
-# Finely - Personal Finance Tracker 💰
+# Finely - Personal Finance Tracker 💥
 
-**Listen up! Track your pathetic Earth money without losing your goddamn mind.** Finely's this badass, no-BS desktop app for wrangling your finances, slapped together with [Flet](https://flet.dev) and Python. Killer charts and your data stays locked in your crappy computer—no clouds, no spying portals. Perfect for idiots who wanna pretend they know what they're doing with their cash.
+Listen up, you primitive money-grubbing meatbags! **Finely** is the most *insanely* badass desktop app for wrestling your pathetic Earth credits into submission. Built with Flet and Python, it’s got a *sick dark mode* and a UI so slick it’ll make your brain short-circuit. Your data? Locked in a local `data.json` vault, safe from the prying eyes of interdimensional tax collectors. Clouds? Pfft, we don’t trust that garbage. Take control of your cash or get schwifty trying.
 
-![Finely Dashboard](screenshots/dashboard.jpg) – Yeah, gaze upon its glory, you simpletons.
-
----
-
-## ✨ Features That'll Blow Your Tiny Mind
-
-- **📊 Dashboard of Doom**: Real-time income, expenses, and net balance stats. See your financial failures instantly!
-- **📈 Charts That Make You Question Reality**: Pie charts slicing categories like a mad scientist, bar charts comparing months like parallel universes, line charts trending your net worth like a wormhole collapse.
-- **💾 Fort Knox Storage**: Data dumps into a local `data.json`. Private as hell approved, no interdimensional leaks.
-- **📦 Runs on Any Garbage OS**: Windows, macOS, Linux. Grab the installer, no Python BS for you normies. Standalone and unstoppable!
-- **🔧 Customize Like a Boss**: Tweak categories in-app. Make it your own financial multiverse.
+![Finely Dashboard](screenshots/dashboard.jpg)![Finely Reports](screenshots/reports.jpg)\
+*Bow before its cosmic glory, you financial plebs.*
 
 ---
 
-## 🚀 Launch This Beast
+## ✨ Features That’ll Melt Your Tiny Brain
 
-### Hack It from Source (If You're Not a Toaster)
+- **📊 Dashboard of Total Annihilation**: Real-time income, expenses, and net balance stats in glorious dark mode. Face your monetary screw-ups head-on!
+- **📈 Charts That Break Reality**: Pie charts slice your spending like a plasma blade, bar charts pit months against each other like gladiators in a time rift, and line charts track your net worth like it’s spiraling into a black hole.
+- **🖤 Dark Mode That Screams Genius**: Sleek, sexy, and easier on your weak human eyes than a supernova.
+- **💾 Data Vault of Doom**: Local `data.json` storage—100% private, no cloud BS, no interdimensional leaks.
+- **📦 Runs on Your Junk OS**: Windows, macOS, Linux. Snag the installer and dominate without a PhD in Python.
+- **🔧 Customize Like a Mad Scientist**: Tweak categories in-app to bend this app to your will. It’s your financial multiverse now.
+
+---
+
+## 🚀 Fire Up This Monster
+
+### Hack It (If You’re Not a Total Toaster)
 
 ```bash
 git clone https://github.com/AmirAnsarpour/Finely.git
@@ -27,32 +29,32 @@ pip install -r requirements.txt
 python main.py
 ```
 
-### Grab the Installer (For Lazy Geniuses)
+### Installer for Lazy Brainiacs
 
-1. Hit [Releases](https://github.com/AmirAnsarpour/Finely/releases).
-2. Snag your OS flavor: **Windows:** `Finely-Windows.exe`.
-3. Run it! (Chmod if your system's a wimp.)
+1. Warp to Releases.
+2. Grab your OS: **Windows**: `Finely-Win.exe`.
+3. Run it, you coward. (Chmod if your system’s got no spine.)
 
-No Python? Who cares! It's all bundled, ready to dominate.
-
----
-
-## 🤝 Join the My-Level Revolution! 🚀
-
-Finely's raw potential, but it needs mad scientists like you to crank it to infinity! Contribute or get out of the way.
-
-**Warp In and Help:**
-
-- **🐞 Squash Bugs:** Spot a glitch? [Issue](https://github.com/AmirAnsarpour/Finely/issues) it—details or GTFO.
-- **💡 Invent Features:** New charts, budgeting nukes, export rifts? Spill in [discussions](https://github.com/AmirAnsarpour/Finely/discussions)!
-- **👨‍💻 Code Like a God:** Fix, polish, add chaos. PRs welcome—[guidelines](CONTRIBUTING.md) incoming.
-- **🎨 Design Domination:** Amp the visuals, intuit the UI. Make it interdimensional.
-- **🌍 Translate to Alien Tongues:** Spread Finely across galaxies.
-
-Together, we'll make this the ultimate finance destroyer! Infinite riches await!
+No Python? Whatever, it’s all bundled. Point, click, dominate.
 
 ---
 
-## 📄 License
+## 🤝 Join the Cosmic Cash Rebellion
 
-MIT, baby—check [LICENSE](LICENSE). Free as the multiverse, but don't screw it up.
+Finely’s a frickin’ masterpiece, but it’s begging for more chaos. Got the stones to make it *legendary*? Jump in or get lost in a wormhole.
+
+1. **🐛 Obliterate Bugs**: Spot a glitch? Scream about it in Issues with details or buzz off.
+2. **💡 Cook Up Insane Ideas**: New charts, budgeting death rays, export portals? Rant in Discussions.
+
+# **👨‍💻 Code Like a Freakin’ Deity**: Fix, tweak, or unleash madness. PRs welcome—guidelines coming when I feel like it.
+
+1. **🎨 Design Like a Psycho Artist**: Make the UI even more mind-bending. Dark mode’s just the appetizer.
+2. **🌌 Conquer Alien Economies**: Translate Finely for every species in the multiverse.
+
+Let’s turn this into the ultimate money-destroying machine. Riches beyond your puny comprehension await!
+
+---
+
+## 📜 License
+
+MIT—check LICENSE. It’s free as a rogue planet, but don’t be a Jerry and screw it up.
