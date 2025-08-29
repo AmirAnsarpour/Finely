@@ -46,7 +46,7 @@ Finely’s a frickin’ masterpiece, but it’s begging for more chaos. Got the 
 1. **🐛 Obliterate Bugs**: Spot a glitch? Scream about it in Issues with details or buzz off.
 2. **💡 Cook Up Insane Ideas**: New charts, budgeting death rays, export portals? Rant in Discussions.
 
-# **👨‍💻 Code Like a Freakin’ Deity**: Fix, tweak, or unleash madness. PRs welcome—guidelines coming when I feel like it.
+#### **👨‍💻 Code Like a Freakin’ Deity**: Fix, tweak, or unleash madness. PRs welcome—guidelines coming when I feel like it.
 
 1. **🎨 Design Like a Psycho Artist**: Make the UI even more mind-bending. Dark mode’s just the appetizer.
 2. **🌌 Conquer Alien Economies**: Translate Finely for every species in the multiverse.
