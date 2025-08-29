@@ -1,19 +1,11 @@
 # Python
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-.Python
 env/
 venv/
-*.egg-info/
 
 # Data
 data.json
 
-# Flet
-.flet/
+build/
+dist/
 
-# OS
-.DS_Store
-Thumbs.db
+*.spec
