@@ -26,9 +26,7 @@ _Bow before its cosmic glory, you financial plebs._
 ### 🧠 Hack It (For Devs & Terminal Wizards)
 
 ```bash
-git clone https://github.com/AmirAnsarpour/Finely.git
-cd Finely
-pip install .
+pip install finely
 finely
 ```
 
