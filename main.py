@@ -456,46 +456,175 @@ def main(page: ft.Page):
             width=400
         )
 
-        recent_tx = []
+        # --- تمام تراکنش‌ها ---
         all_tx = (
             [{"type": "income", **tx} for tx in data["income"]] +
             [{"type": "expense", **tx} for tx in data["expenses"]]
         )
-        all_tx.sort(key=lambda x: x["date"], reverse=True)
 
-        for tx in all_tx[:5]:
-            amount = f"{'+' if tx['type']=='income' else '-'} {tx['amount']:,.2f}"
-            color = colors["accent"] if tx['type'] == 'income' else colors["danger"]
-            label = tx.get("source", tx.get("description", "Unknown"))
-            icon = "paid" if tx['type'] == 'income' else "payments"
-            recent_tx.append(
-                ft.ListTile(
-                    leading=ft.Container(
-                        content=ft.Icon(icon, color=color, size=18),
-                        width=32, height=32,
-                        bgcolor=f"{color}10",
-                        border_radius=16,
-                        alignment=ft.alignment.center
+        # --- State Filters ---
+        filter_type = ft.Ref[ft.Dropdown]()
+        search_field = ft.Ref[ft.TextField]()
+        sort_order = ft.Ref[ft.Dropdown]()
+
+        # --- تابع نمایش تراکنش‌ها ---
+        def build_transaction_list():
+            # فیلتر بر اساس نوع
+            filtered = all_tx.copy()
+            selected_filter = filter_type.current.value
+            if selected_filter == "income":
+                filtered = [t for t in filtered if t["type"] == "income"]
+            elif selected_filter == "expense":
+                filtered = [t for t in filtered if t["type"] == "expense"]
+
+            # جستجو
+            query = search_field.current.value.strip().lower()
+            if query:
+                filtered = [
+                    t for t in filtered
+                    if query in t.get("source", "").lower() or
+                       query in t.get("description", "").lower() or
+                       query in t["category"].lower()
+                ]
+
+            # مرتب‌سازی
+            sort_val = sort_order.current.value
+            if sort_val == "newest":
+                filtered.sort(key=lambda x: x["date"], reverse=True)
+            elif sort_val == "oldest":
+                filtered.sort(key=lambda x: x["date"])
+            elif sort_val == "amount_high":
+                filtered.sort(key=lambda x: x["amount"], reverse=True)
+            elif sort_val == "amount_low":
+                filtered.sort(key=lambda x: x["amount"])
+
+            # ساخت لیست کارت‌ها
+            tx_cards = []
+            for tx in filtered:
+                amount = f"{'+' if tx['type']=='income' else '-'} {tx['amount']:,.2f}"
+                color = colors["accent"] if tx['type'] == 'income' else colors["danger"]
+                icon = "paid" if tx['type'] == 'income' else "payments"
+                label = tx.get("source", tx.get("description", "Unknown"))
+
+                card = ft.Container(
+                    content=ft.Row([
+                        ft.Container(
+                            content=ft.Icon(icon, color=color, size=20),
+                            width=40, height=40,
+                            bgcolor=f"{color}15",
+                            border_radius=20,
+                            alignment=ft.alignment.center,
+                        ),
+                        ft.Column([
+                            ft.Text(label, size=14, color=colors["text"], weight="bold", font_family="Vazirmatn"),
+                            ft.Text(f"{tx['category']} • {tx['date']}", size=12, color=colors["text_light"], font_family="Vazirmatn"),
+                        ], expand=True),
+                        ft.Text(amount, color=color, size=16, weight="bold", font_family="Vazirmatn Bold")
+                    ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN, vertical_alignment=ft.CrossAxisAlignment.CENTER),
+                    padding=ft.padding.symmetric(horizontal=16, vertical=12),
+                    border_radius=10,
+                    bgcolor=colors["card"],
+                    shadow=ft.BoxShadow(
+                        spread_radius=0,
+                        blur_radius=8,
+                        color=ft.Colors.with_opacity(0.1, colors["shadow"]),
+                        offset=ft.Offset(0, 2)
                     ),
-                    title=ft.Text(label, size=14, color=colors["text"], font_family="Vazirmatn"),
-                    subtitle=ft.Text(f"{tx['category']} • {tx['date']}", size=12, color=colors["text_light"], font_family="Vazirmatn"),
-                    trailing=ft.Text(amount, color=color, size=14, weight="bold"),
-                    dense=True
+                    animate=ft.Animation(200, ft.AnimationCurve.EASE_OUT),
+                    on_hover=lambda e: setattr(e.control, "bgcolor", colors["hover_bg"] if e.data == "true" else colors["card"]) or e.control.update(),
+                    tooltip=f"Click to see details (not implemented yet)",
                 )
-            )
+                tx_cards.append(card)
+
+            return tx_cards
+
+        # --- هدر با فیلترها ---
+        filter_row = ft.Row([
+            ft.Dropdown(
+                ref=filter_type,
+                value="all",
+                options=[
+                    ft.dropdown.Option("all", "all"),
+                    ft.dropdown.Option("income", "income"),
+                    ft.dropdown.Option("expense", "expense"),
+                ],
+                width=120,
+                dense=True,
+                content_padding=ft.padding.symmetric(horizontal=10),
+                text_size=13,
+                on_change=lambda _: update_tx_list(),
+            ),
+            ft.TextField(
+                ref=search_field,
+                hint_text="Search...",
+                hint_style=ft.TextStyle(color=colors["text_light"], size=13),
+                width=200,
+                dense=True,
+                content_padding=ft.padding.symmetric(horizontal=10),
+                text_size=13,
+                on_change=lambda _: update_tx_list(),
+                prefix_icon=ft.Icons.SEARCH,
+            ),
+            ft.Dropdown(
+                ref=sort_order,
+                value="newest",
+                options=[
+                    ft.dropdown.Option("newest", "newest"),
+                    ft.dropdown.Option("oldest", "oldest"),
+                    ft.dropdown.Option("amount_high", "amount_high"),
+                    ft.dropdown.Option("amount_low", "amount_low"),
+                ],
+                width=140,
+                dense=True,
+                content_padding=ft.padding.symmetric(horizontal=10),
+                text_size=13,
+                on_change=lambda _: update_tx_list(),
+            ),
+        ], spacing=10, alignment=ft.MainAxisAlignment.START)
+
+        # --- لیست اسکرول‌دار ---
+        tx_list_view = ft.ListView(
+            expand=True,
+            spacing=8,
+            padding=ft.padding.only(top=10),
+        )
+
+        def update_tx_list():
+            tx_list_view.controls = build_transaction_list()
+            counter_text.value = f" ({len(tx_list_view.controls)} transactions)"
+            page.update()
+
+        # --- عنوان با شمارنده ---
+        counter_text = ft.Text("", size=14, color=colors["text_light"], font_family="Vazirmatn")
 
         recent_section = ft.Container(
             content=ft.Column([
-                ft.Text("📌 Recent Transactions", size=18, weight="bold", color=colors["text"], font_family="Vazirmatn Bold"),
+                ft.Row([
+                    ft.Text("📌 All Transactions", size=18, weight="bold", color=colors["text"], font_family="Vazirmatn Bold"),
+                    counter_text,
+                ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
                 ft.Divider(height=1, color=colors["border"]),
-                *recent_tx
-            ]),
-            padding=12,
+                filter_row,
+                ft.Container(
+                    content=tx_list_view,
+                    expand=True,
+                    height=300,
+                    border=ft.border.all(1, colors["border"]),
+                    border_radius=8,
+                    padding=ft.padding.only(top=8),
+                    bgcolor=colors["surface"],
+                )
+            ], spacing=10, expand=True),
+            padding=16,
             border=ft.border.all(1, colors["border"]),
             border_radius=8,
             bgcolor=colors["card"],
-            margin=ft.margin.only(top=20)
+            margin=ft.margin.only(top=20),
+            expand=True
         )
+
+        # --- اولین بار ساخت لیست ---
+        update_tx_list()
 
         left_col = ft.Column(
             controls=[
