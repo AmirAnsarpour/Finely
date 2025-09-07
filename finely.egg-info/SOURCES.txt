@@ -1,0 +1,10 @@
+LICENSE
+README.md
+pyproject.toml
+finely/main.py
+finely.egg-info/PKG-INFO
+finely.egg-info/SOURCES.txt
+finely.egg-info/dependency_links.txt
+finely.egg-info/entry_points.txt
+finely.egg-info/requires.txt
+finely.egg-info/top_level.txt

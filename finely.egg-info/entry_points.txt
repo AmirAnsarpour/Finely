@@ -1,0 +1,2 @@
+[console_scripts]
+finely = finely.main:run_app

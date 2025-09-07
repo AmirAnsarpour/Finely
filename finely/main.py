@@ -7,7 +7,14 @@ import matplotlib.pyplot as plt
 import matplotlib
 from io import BytesIO
 import base64
+import platform
+import importlib.metadata
 
+def get_current_version():
+    try:
+        return importlib.metadata.version("finely")
+    except Exception:
+        return "unknown"
 
 # --- تنظیم Matplotlib ---
 matplotlib.use("Agg")
@@ -75,7 +82,18 @@ def update_matplotlib_colors(theme="light"):
     })
 
 # --- Data File ---
-DATA_FILE = "data.json"
+def get_data_dir():
+    if platform.system() == "Windows":
+        return os.path.join(os.getenv("APPDATA"), "Finely")
+    elif platform.system() == "Darwin":
+        return os.path.expanduser("~/Library/Application Support/Finely")
+    else:  # Linux
+        return os.path.expanduser("~/.local/share/Finely")
+
+DATA_DIR = get_data_dir()
+os.makedirs(DATA_DIR, exist_ok=True)
+
+DATA_FILE = os.path.join(DATA_DIR, "data.json")
 default_data = {
     "income": [],
     "expenses": [],
@@ -969,4 +987,8 @@ def main(page: ft.Page):
 
     show_dashboard()
 
-ft.app(target=main, assets_dir="assets", view=ft.FLET_APP)
+def run_app():
+    ft.app(target=main, assets_dir="assets", view=ft.FLET_APP)
+
+if __name__ == "__main__":
+    run_app()

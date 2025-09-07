@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "finely"
+version = "1.0.0"
+description = "A beautiful personal finance dashboard built with Flet"
+authors = [
+    { name = "Amir Ansarpour", email = "amir.ansarpour2003@gmail.com" }  # ✅ تصحیح شده: @ به جای ,
+]
+license = { text = "MIT" }
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "flet>=0.28.0",
+    "matplotlib>=3.10.0",
+]
+
+[project.scripts]
+finely = "finely.main:run_app"
+
+[project.optional-dependencies]
+dev = [
+    "flet-cli",
+    "watchdog"
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["finely*"]
