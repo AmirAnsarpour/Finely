@@ -4,10 +4,10 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "finely"
-version = "1.0.1"
+version = "1.0.2"
 description = "A beautiful personal finance dashboard built with Flet"
 authors = [
-    { name = "Amir Ansarpour", email = "amir.ansarpour2003@gmail.com" }  # ✅ تصحیح شده: @ به جای ,
+    { name = "Amir Ansarpour", email = "amir.ansarpour2003@gmail.com" }
 ]
 license = { text = "MIT" }
 readme = "README.md"

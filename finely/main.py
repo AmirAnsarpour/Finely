@@ -8,6 +8,7 @@ import matplotlib
 from io import BytesIO
 import base64
 import platform
+import toml
 
 # --- تنظیم Matplotlib ---
 matplotlib.use("Agg")
@@ -911,11 +912,11 @@ def main(page: ft.Page):
                 ft.Divider(height=1, color=colors["border"]),
                 ft.ListTile(
                     title=ft.Text("Version", weight="bold", color=colors["text"]),
-                    subtitle=ft.Text("1.0.0", color=colors["text_light"])
+                    subtitle=ft.Text(toml.load("pyproject.toml")["project"]["version"], color=colors["text_light"])
                 ),
                 ft.ListTile(
                     title=ft.Text("Developer", weight="bold", color=colors["text"]),
-                    subtitle=ft.Text("Amir Ansarpour", color=colors["text_light"])
+                    subtitle=ft.Text(toml.load("pyproject.toml")["project"]["authors"][0]["name"], color=colors["text_light"])
                 ),
                 ft.ListTile(
                     title=ft.Text("Data File", weight="bold", color=colors["text"]),
