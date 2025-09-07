@@ -8,13 +8,6 @@ import matplotlib
 from io import BytesIO
 import base64
 import platform
-import importlib.metadata
-
-def get_current_version():
-    try:
-        return importlib.metadata.version("finely")
-    except Exception:
-        return "unknown"
 
 # --- تنظیم Matplotlib ---
 matplotlib.use("Agg")

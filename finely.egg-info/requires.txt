@@ -1,6 +1,0 @@
-flet>=0.28.0
-matplotlib>=3.10.0
-
-[dev]
-flet-cli
-watchdog

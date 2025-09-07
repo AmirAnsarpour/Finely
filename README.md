@@ -1,10 +1,10 @@
 # Finely - Personal Finance Tracker 💥
 
-<img src="finely/assets/icon/icon-tra.png" width="100">
+<img src="https://github.com/AmirAnsarpour/Finely/raw/main/finely/assets/icon/icon-tra.png" width="100">
 
 Listen up, you primitive money-grubbing meatbags! **Finely** is the most _insanely_ badass desktop app for wrestling your pathetic Earth credits into submission. Built with Flet and Python, it’s got a _sick dark mode_ and a UI so slick it’ll make your brain short-circuit. Your data? **Now safely stored in your OS’s sacred user directory** — no more fragile `data.json` floating next to the code. Clouds? Pfft, we don’t trust that garbage. Take control of your cash or get schwifty trying.
 
-![Finely Dashboard](finely/assets/screenshots/dashboard.jpg)![Finely Reports](finely/assets/screenshots/reports.jpg)\
+![Finely Dashboard](https://github.com/AmirAnsarpour/Finely/raw/main/finely/assets/screenshots/dashboard.jpg)![Finely Reports](https://github.com/AmirAnsarpour/Finely/raw/main/finely/assets/screenshots/reports.jpg)\
 _Bow before its cosmic glory, you financial plebs._
 
 ---
@@ -14,14 +14,10 @@ _Bow before its cosmic glory, you financial plebs._
 - **📊 Dashboard of Total Annihilation**: Real-time income, expenses, and net balance stats in glorious dark mode. Face your monetary screw-ups head-on!
 - **📈 Charts That Break Reality**: Pie charts slice your spending like a plasma blade, bar charts pit months against each other like gladiators in a time rift, and line charts track your net worth like it’s spiraling into a black hole.
 - **🖤 Dark Mode That Screams Genius**: Sleek, mind-bending, and easier on your weak human eyes than a supernova.
-- **💾 Data Vault of Doom (Upgraded!)**: Data now auto-saves to:
-  - **Windows**: `%APPDATA%\Finely\data.json`
-  - **macOS**: `~/Library/Application Support/Finely/data.json`
-  - **Linux**: `~/.local/share/Finely/data.json`
-    → **Survives code updates, folder moves, and even alien invasions.**
+- **💾 Data Vault of Doom (Upgraded!)** Survives code updates, folder moves, and even alien invasions.
 - **📦 Runs on Your Junk OS**: Windows, macOS, Linux. Snag the installer and dominate without a PhD in Python.
 - **🔧 Customize Like a Mad Scientist**: Tweak categories in-app to bend this app to your will. It’s your financial multiverse now.
-- **⚡ Run Anywhere with `finely`**: After install, just type `finely` in your terminal — no matter where you are. Magic.
+- **⚡ Run Anywhere with `finely`**: After install, just type `finely` in your terminal — no matter where you are.
 
 ---
 
@@ -32,7 +28,7 @@ _Bow before its cosmic glory, you financial plebs._
 ```bash
 git clone https://github.com/AmirAnsarpour/Finely.git
 cd Finely
-pip install -e .
+pip install .
 finely
 ```
 
